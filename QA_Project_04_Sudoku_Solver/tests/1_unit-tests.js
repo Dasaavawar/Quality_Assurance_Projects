@@ -1,0 +1,57 @@
+const chai = require('chai');
+const assert = chai.assert;
+
+const Solver = require('../controllers/sudoku-solver.js');
+const solver = new Solver();
+
+suite('Unit Tests', () => {
+
+  test("Logic handles a valid puzzle string of 81 characters", function done() {
+    assert.equal(solver.validate('1.5..2.84..63.12.7.2..5.....9..1....8.2.3674.3.7.2..9.47...8..1..16....926914.37.'), '135762984946381257728459613694517832812936745357824196473298561581673429269145378');
+  });
+
+  test("Logic handles a puzzle string with invalid characters (not 1-9 or .)", function done() {
+    assert.equal(solver.validate('5..91372.3...8.5.9.9.25..8.68.47.23...95..46.7.4.....5.2.......4..8916..85.72...f'), false);
+  });
+
+  test("Logic handles a puzzle string that is not 81 characters in length", function done() {
+    assert.equal(solver.validate('..839.7.575.....964..1.......16.29846.9.312.7..754.....62..5.78.8...3.2...492...17'), false);
+  });
+
+  test("Logic handles a valid row placement", function done() {
+    assert.equal(solver.checkRowPlacement('.7.89.....5....3.4.2..4..1.5689..472...6.....1.7.5.63873.1.2.8.6..47.1..2.9.387.6', 'A', '6', 4), true);
+  });
+
+  test("Logic handles an invalid row placement", function done() {
+    assert.equal(solver.checkRowPlacement('82..4..6...16..89...98315.749.157.............53..4...96.415..81..7632..3...28.51', 'A', '3', 4), false);
+  });
+
+  test("Logic handles a valid column placement", function done() {
+    assert.equal(solver.checkColPlacement('1.5..2.84..63.12.7.2..5.....9..1....8.2.3674.3.7.2..9.47...8..1..16....926914.37.', 'A', '2', 3), true);
+  });
+
+  test("Logic handles an invalid column placement", function done() {
+    assert.equal(solver.checkColPlacement('5..91372.3...8.5.9.9.25..8.68.47.23...95..46.7.4.....5.2.......4..8916..85.72...3', 'A', '3', 4), false);
+  });
+
+  test("Logic handles a valid region (3x3 grid) placement", function done() {
+    assert.equal(solver.checkRegionPlacement('..839.7.575.....964..1.......16.29846.9.312.7..754.....62..5.78.8...3.2...492...1', 'A', '1', 2), true);
+  });
+
+  test("Logic handles an invalid region (3x3 grid) placement", function done() {
+    assert.equal(solver.checkRegionPlacement('.7.89.....5....3.4.2..4..1.5689..472...6.....1.7.5.63873.1.2.8.6..47.1..2.9.387.6', 'A', '9', 3), false);
+  });
+
+  test("Valid puzzle strings pass the solver", function done() {
+    assert.equal(solver.validate('827549163531672894649831527496157382218396475753284916962415738185763249374928651'), '827549163531672894649831527496157382218396475753284916962415738185763249374928651');
+  });
+
+  test("Invalid puzzle strings fail the solver", function done() {
+    assert.equal(solver.validate('47389126585172639492634581756891347234268795119725463873416258968547912321953874s'), false);
+  });
+
+  test("Solver returns the expected solution for an incomplete puzzle", function done() {
+    assert.equal(solver.validate('..839.7.575.....964..1.......16.29846.9.312.7..754.....62..5.78.8...3.2...492...1'), '218396745753284196496157832531672984649831257827549613962415378185763429374928561');
+  });
+  
+});

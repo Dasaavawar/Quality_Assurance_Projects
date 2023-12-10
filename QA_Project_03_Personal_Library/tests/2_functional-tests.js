@@ -6,8 +6,8 @@
 *       
 */
 
-const chaiHttp = require('chai-http');
 const chai = require('chai');
+const chaiHttp = require('chai-http');
 const assert = chai.assert;
 const { before, test, after } = require('mocha');
 
@@ -35,12 +35,12 @@ suite('Functional Tests', function() {
     chai.request(server)
       .get('/api/books')
       .end(function(err, res) {
-        assert.equal(res.status, 200);
-        assert.isArray(res.body, 'response should be an array');
-        assert.property(res.body[0], 'commentcount', 'Books in array should contain commentcount');
-        assert.property(res.body[0], 'title', 'Books in array should contain title');
-        assert.property(res.body[0], '_id', 'Books in array should contain _id');
-        done();
+        assert.equal(res.status, 200)
+        assert.isArray(res.body, 'response should be an array')
+        assert.property(res.body[0], 'commentcount', 'Books in array should contain commentcount')
+        assert.property(res.body[0], 'title', 'Books in array should contain title')
+        assert.property(res.body[0], '_id', 'Books in array should contain _id')
+        done()
       });
   });
   /*
@@ -48,7 +48,6 @@ suite('Functional Tests', function() {
   */
 
   suite('Routing tests', function() {
-
 
     suite('POST /api/books with title => create book object/expect book object', function() {
 
@@ -60,12 +59,12 @@ suite('Functional Tests', function() {
             title: "Don Qixote"
           })
           .end(function(err, res) {
-            assert.equal(res.status, 200);
-            assert.equal(res.body.title, "Don Qixote");
-            assert.deepEqual(res.body.comments, []);
-            assert.equal(res.body.commentcount, 0);
-            firstId = res.body._id;
-            done();
+            assert.equal(res.status, 200)
+            assert.equal(res.body.title, "Don Qixote")
+            assert.deepEqual(res.body.comments, [])
+            assert.equal(res.body.commentcount, 0)
+            firstId = res.body._id
+            done()
           });
       });
 
@@ -75,14 +74,13 @@ suite('Functional Tests', function() {
           .set("content-type", "application/json")
           .send({})
           .end(function(err, res) {
-            assert.equal(res.status, 200);
-            assert.equal(res.text, 'missing required field title');
-            done();
+            assert.equal(res.status, 200)
+            assert.equal(res.text, 'missing required field title')
+            done()
           });
       });
 
     });
-
 
     suite('GET /api/books => array of books', function() {
 
@@ -91,14 +89,12 @@ suite('Functional Tests', function() {
           .get('/api/books')
           .set("content-type", "application/json")
           .end(function(err, res) {
-            assert.equal(res.status, 200);
-            assert.equal(res.body.length, 2);
-            done();
+            assert.equal(res.status, 200)
+            assert.equal(res.body.length, 2)
+            done()
           });
       });
-
     });
-
 
     suite('GET /api/books/[id] => book object with [id]', function() {
 
@@ -107,9 +103,9 @@ suite('Functional Tests', function() {
           .get(`/api/books/${wrongId}`)
           .set("content-type", "application/json")
           .end(function(err, res) {
-            assert.equal(res.status, 200);
-            assert.equal(res.text, 'no book exists');
-            done();
+            assert.equal(res.status, 200)
+            assert.equal(res.text, 'no book exists')
+            done()
           });
       });
 
@@ -118,15 +114,14 @@ suite('Functional Tests', function() {
           .get(`/api/books/${firstId}`)
           .set("content-type", "application/json")
           .end(function(err, res) {
-            assert.equal(res.status, 200);
-            assert.equal(res.body.title, "Don Qixote");
-            assert.deepEqual(res.body.comments, []);
-            done();
+            assert.equal(res.status, 200)
+            assert.equal(res.body.title, "Don Qixote")
+            assert.deepEqual(res.body.comments, [])
+            done()
           });
       });
 
     });
-
 
     suite('POST /api/books/[id] => add comment/expect book object with id', function() {
 
@@ -138,10 +133,10 @@ suite('Functional Tests', function() {
             comment: "Great novel"
           })
           .end(function(err, res) {
-            assert.equal(res.status, 200);
-            assert.equal(res.body.title, "Don Qixote");
-            assert.deepEqual(res.body.comments, ['Great novel']);
-            done();
+            assert.equal(res.status, 200)
+            assert.equal(res.body.title, "Don Qixote")
+            assert.deepEqual(res.body.comments, ['Great novel'])
+            done()
           });
       });
 
@@ -151,9 +146,9 @@ suite('Functional Tests', function() {
           .set("content-type", "application/json")
           .send({})
           .end(function(err, res) {
-            assert.equal(res.status, 200);
-            assert.equal(res.text, 'missing required field comment');
-            done();
+            assert.equal(res.status, 200)
+            assert.equal(res.text, 'missing required field comment')
+            done()
           });
       });
 
@@ -165,9 +160,9 @@ suite('Functional Tests', function() {
             comment: "Inspirational"
           })
           .end(function(err, res) {
-            assert.equal(res.status, 200);
-            assert.equal(res.text, 'no book exists');
-            done();
+            assert.equal(res.status, 200)
+            assert.equal(res.text, 'no book exists')
+            done()
           });
       });
 
@@ -180,9 +175,9 @@ suite('Functional Tests', function() {
           .delete(`/api/books/${firstId}`)
           .set("content-type", "application/json")
           .end(function(err, res) {
-            assert.equal(res.status, 200);
-            assert.equal(res.text, 'delete successful');
-            done();
+            assert.equal(res.status, 200)
+            assert.equal(res.text, 'delete successful')
+            done()
           });
       });
 
@@ -191,9 +186,9 @@ suite('Functional Tests', function() {
           .delete(`/api/books/${wrongId}`)
           .set("content-type", "application/json")
           .end(function(err, res) {
-            assert.equal(res.status, 200);
-            assert.equal(res.text, 'no book exists');
-            done();
+            assert.equal(res.status, 200)
+            assert.equal(res.text, 'no book exists')
+            done()
           });
       });
 
@@ -203,6 +198,7 @@ suite('Functional Tests', function() {
 
   after(function() {
     chai.request(server)
-      .get('/');
-  })
+      .get('/')
+  });
+  
 });
