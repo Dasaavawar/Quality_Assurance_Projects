@@ -1,7 +1,7 @@
 const chai = require("chai");
 const chaiHttp = require('chai-http');
 const assert = chai.assert;
-const { before, test, after } = require('mocha');
+const { test, after } = require('mocha');
 
 chai.use(chaiHttp);
 
@@ -166,4 +166,9 @@ suite('Functional Tests', () => {
       })
   });
   
+  after(function() {
+    chai.request(server)
+      .get('/')
+  });
+
 });

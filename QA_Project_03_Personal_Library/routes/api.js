@@ -20,10 +20,9 @@ module.exports = function(app) {
       //json res format: [{"_id": bookid, "title": book_title, "commentcount": num_of_comments },...]
       try {
         const data = await Book.find({}).select('_id title commentcount')
-        res.json(data);
-        return;
+        return res.json(data);
       } catch (err) {
-        console.log(err)
+        console.log(err);
       }
     })
 
@@ -32,8 +31,7 @@ module.exports = function(app) {
       try {
         let title = req.body.title;
         if (!title) {
-          res.send('missing required field title');
-          return;
+          return res.send('missing required field title');
         }
 
         const newBook = new Book({
@@ -44,15 +42,13 @@ module.exports = function(app) {
 
         newBook.save()
           .then(() => {
-            res.json(newBook)
-            return;
+            return res.json(newBook);
           })
           .catch(() => {
-            res.send('there was an error saving the book');
-            return;
+            return res.send('there was an error saving the book');
           })
       } catch (err) {
-        console.log(err)
+        console.log(err);
       }
     })
 
@@ -61,15 +57,13 @@ module.exports = function(app) {
       try {
         await Book.deleteMany({})
           .then(() => {
-            res.send('complete delete successful');
-            return;
+            return res.send('complete delete successful');
           })
           .catch(() => {
-            res.send('there was an error deleting');
-            return;
+            return res.send('there was an error deleting');
           })
       } catch (err) {
-        console.log(err)
+        console.log(err);
       }
     });
 
@@ -80,19 +74,16 @@ module.exports = function(app) {
       try {
         let bookid = req.params.id;
         if (!bookid) {
-          res.send('missing required field bookid');
-          return;
+          return res.send('missing required field bookid');
         }
         const data = await Book.findById(bookid).select('_id title comments')
         if (!data) {
-          res.send('no book exists');
-          return;
+          return res.send('no book exists');
         } else {
-          res.json(data);
-          return;
+          return res.json(data);
         }
       } catch (err) {
-        console.log(err)
+        console.log(err);
       }
     })
 
@@ -102,32 +93,27 @@ module.exports = function(app) {
         let bookid = req.params.id;
         let comment = req.body.comment;
         if (!bookid) {
-          res.send('missing required field bookid');
-          return;
+          return res.send('missing required field bookid');
         }
         if (!comment) {
-          res.send('missing required field comment');
-          return;
+          return res.send('missing required field comment');
         }
         const findBook = await Book.findById(bookid)
         if (!findBook) {
-          res.send('no book exists');
-          return;
+          return res.send('no book exists');
         } else {
           findBook.comments.push(comment);
           findBook.commentcount = findBook.commentcount + 1;
           await findBook.save()
             .then(() => {
-              res.json(findBook);
-              return;
+              return res.json(findBook);
             })
             .catch(() => {
-              res.send('there was an error commenting');
-              return;
+              return res.send('there was an error commenting');
             })
         }
       } catch (err) {
-        console.log(err)
+        console.log(err);
       }
     })
 
@@ -136,26 +122,23 @@ module.exports = function(app) {
       try {
         let bookid = req.params.id;
         if (!bookid) {
-          res.send('missing required field bookid');
-          return;
+          return res.send('missing required field bookid');
         }
         const deleteBook = await Book.findById(bookid)
         if (!deleteBook) {
-          res.send('no book exists');
-          return;
+          return res.send('no book exists');
         } else {
           deleteBook.deleteOne()
             .then(() => {
-              res.send('delete successful');
-              return;
+              return res.send('delete successful');
             })
             .catch(() => {
-              res.send('there was an error deleting');
-              return;
+              return res.send('there was an error deleting');
             })
         }
       } catch (err) {
-        console.log(err)
+        console.log(err);
       }
     });
+
 }

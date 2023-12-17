@@ -58,11 +58,10 @@ module.exports = function(app) {
             return true;
           });
 
-          res.json(filteredIssues);
-          return;
+          return res.json(filteredIssues);
         }
       } catch (err) {
-        console.log(err)
+        console.log(err);
       }
     })
 
@@ -72,8 +71,7 @@ module.exports = function(app) {
         const { issue_title, issue_text, created_by, assigned_to, status_text } = req.body;
 
         if (!issue_title || !issue_text || !created_by) {
-          res.json({ error: 'required field(s) missing' });
-          return;
+          return res.json({ error: 'required field(s) missing' });
         }
 
         const newIssue = new Issue({
@@ -96,28 +94,24 @@ module.exports = function(app) {
           await newProject
             .save()
             .then(() => {
-              res.json(newIssue)
-              return;
+              return res.json(newIssue);
             })
             .catch(() => {
-              res.json({ error: 'there was an error saving the issue' });
-              return;
+              return res.json({ error: 'there was an error saving the issue' });
             })
         } else {
           findProject.issues.push(newIssue);
           findProject
             .save()
             .then(() => {
-              res.json(newIssue)
-              return;
+              return res.json(newIssue);
             })
             .catch(() => {
-              res.json({ error: 'there was an error saving the issue' });
-              return;
+              return res.json({ error: 'there was an error saving the issue' });
             })
         }
       } catch (err) {
-        console.log(err)
+        console.log(err);
       }
     })
 
@@ -126,20 +120,17 @@ module.exports = function(app) {
         const { _id, open, issue_title, issue_text, created_by, assigned_to, status_text } = req.body;
 
         if (!_id) {
-          res.json({ error: 'missing _id' });
-          return;
+          return res.json({ error: 'missing _id' });
         }
 
         if (!open && !issue_title && !issue_text && !created_by && !assigned_to && !status_text) {
-          res.json({ error: 'no update field(s) sent', '_id': _id });
-          return;
+          return res.json({ error: 'no update field(s) sent', '_id': _id });
         }
 
         const existingIssue = await Issue.findById(_id)
 
         if (!existingIssue) {
-          res.json({ error: 'could not update', '_id': _id });
-          return;
+          return res.json({ error: 'could not update', '_id': _id });
         } else {
           if (issue_title) {
             existingIssue.issue_title = issue_title || existingIssue.issue_title;
@@ -164,19 +155,16 @@ module.exports = function(app) {
           await existingIssue
             .save()
             .then(() => {
-              res.json({ result: 'successfully updated', '_id': _id })
-              return;
+              return res.json({ result: 'successfully updated', '_id': _id });
             })
             .catch(() => {
-              res.json({ error: 'could not update', '_id': _id });
-              return;
+              return res.json({ error: 'could not update', '_id': _id });
             });
         }
 
       } catch (err) {
         const { _id } = req.body;
-        res.json({ error: 'could not update', '_id': _id });
-        return;
+        return res.json({ error: 'could not update', '_id': _id });
       }
     })
 
@@ -185,13 +173,11 @@ module.exports = function(app) {
         let project = req.params.project;
         const { _id } = req.body;
         if (!_id) {
-          res.json({ error: 'missing _id' });
-          return;
+          return res.json({ error: 'missing _id' });
         }
         const deleteIssue = await Issue.findById(_id)
         if (!deleteIssue) {
-          res.json({ error: 'could not delete', '_id': _id });
-          return;
+          return res.json({ error: 'could not delete', '_id': _id });
         } else {
           deleteIssue
             .deleteOne()
@@ -202,22 +188,18 @@ module.exports = function(app) {
                   const updatedIssues = findProject.issues.filter(issueId => issueId.toString() != _id);
                   findProject.issues = updatedIssues;
                   await findProject.save();
-                  res.json({ result: 'successfully deleted', '_id': _id });
-                  return;
+                  return res.json({ result: 'successfully deleted', '_id': _id });
                 }
               }
             })
             .catch(() => {
-              res.json({ error: 'could not delete', '_id': _id });
-              return;
+              return res.json({ error: 'could not delete', '_id': _id });
             });
         }
       } catch (err) {
         const { _id } = req.body;
-        res.json({ error: 'could not delete', '_id': _id });
-        return;
+        return res.json({ error: 'could not delete', '_id': _id });
       }
     });
 
 };
-// findProject.save().then(data => {})
